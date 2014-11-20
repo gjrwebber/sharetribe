@@ -1,4 +1,7 @@
 module PaypalService
+
+  Invnum = PaypalService::API::Invnum
+
   module DataTypes
 
     module IPN
@@ -115,7 +118,16 @@ module PaypalService
         [:receiver_email, :string, :mandatory],
         [:authorization_id, :string, :mandatory],
         [:payment_id, :string, :mandatory]
-      )
+        )
+
+      CommissionPaid = EntityUtils.define_builder(
+        [:type, const_value: :commission_paid],
+        [:payment_status, const_value: :completed],
+        [:commission_payment_id, :string, :mandatory],
+        [:commission_total, :money, :mandatory],
+        [:commission_fee_total, :money, :mandatory],
+        [:invnum, :string, :mandatory]
+        )
 
       module_function
 
@@ -127,27 +139,30 @@ module PaypalService
       def create_payment_pending_ext(opts); PaymentPendingExt.call(opts) end
       def create_payment_voided(opts); PaymentVoided.call(opts) end
       def create_payment_denied(opts); PaymentDenied.call(opts) end
+      def create_commission_paid(opts); CommissionPaid.call(opts) end
 
       def from_params(params)
         p = HashUtils.symbolize_keys(params)
         type = msg_type(p[:txn_type], p[:payment_status], p[:pending_reason])
+        inv_type = Invnum.type(p[:invoice]) if p[:invoice]
 
-        case type
-        when :order_created
+        if type == :order_created
           to_order_created(p)
-        when :authorization_created
+        elsif type == :authorization_created
           to_authorization_created(p)
-        when :payment_completed
+        elsif type == :payment_completed && inv_type == :commission
+          to_commission_paid(p)
+        elsif type == :payment_completed
           to_payment_completed(p)
-        when :payment_refunded
+        elsif type == :payment_refunded
           to_payment_refunded(p)
-        when :billing_agreement_cancelled
+        elsif type == :billing_agreement_cancelled
           to_billing_agreement_cancelled(p)
-        when :payment_pending_ext
+        elsif type == :payment_pending_ext
           to_payment_pending_ext(p)
-        when :payment_voided
+        elsif type == :payment_voided
           to_payment_voided(p)
-        when :payment_denied
+        elsif type == :payment_denied
           to_payment_denied(p)
         else
           { type: type }
@@ -156,7 +171,6 @@ module PaypalService
 
       ## Privates
       #
-
       def msg_type(txn_type, payment_status, pending_reason)
         txn_type = txn_type.to_s.downcase
         status, reason = payment_status.to_s.downcase, pending_reason.to_s.downcase
@@ -229,7 +243,7 @@ module PaypalService
         create_payment_completed(
           p.merge({
               payment_total: to_money(p[:mc_gross], p[:mc_currency])
-          }))
+            }))
       end
       private_class_method :to_payment_completed
 
@@ -261,7 +275,7 @@ module PaypalService
             auth_exp: :authorization_expires_date,
           },
           params
-        )
+          )
 
         create_payment_pending_ext(
           p.merge({
@@ -277,7 +291,7 @@ module PaypalService
             parent_txn_id: :order_id
           },
           params
-        )
+          )
 
         create_payment_voided(p)
       end
@@ -290,7 +304,7 @@ module PaypalService
             mp_desc: :description
           },
           params
-        )
+          )
 
         create_billing_agreement_cancelled(p)
       end
@@ -303,11 +317,28 @@ module PaypalService
             parent_txn_id: :payment_id
           },
           params
-        )
+          )
 
         create_payment_denied(p)
       end
       private_class_method :to_payment_denied
+
+      def to_commission_paid(params)
+        p = HashUtils.rename_keys(
+          {
+            invoice: :invnum,
+            txn_id: :commission_payment_id
+          },
+          params
+          )
+
+        create_commission_paid(
+          p.merge({
+              commission_total: to_money(params[:mc_gross], params[:mc_currency]),
+              commission_fee_total: to_money(params[:mc_fee], params[:mc_currency])
+            }))
+      end
+      private_class_method :to_commission_paid
 
     end
   end

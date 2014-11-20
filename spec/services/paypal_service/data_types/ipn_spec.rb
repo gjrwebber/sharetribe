@@ -210,6 +210,55 @@ describe PaypalService::DataTypes::IPN do
     "txn_type" => "cart",
   }
 
+  commission_paid = {
+    "action" => "ipn_hook",
+    "business" => "info@sneakers-app.com",
+    "charset" => "windows-1252",
+    "controller" => "paypal_ipn",
+    "custom" => "",
+    "first_name" => "Jean-Philippe",
+    "invoice" => "56649-commission",
+    "ipn_track_id" => "1589139350190",
+    "item_name1" => "Commission payment for Sneakers App Snapback Black/White",
+    "item_number1" => "0",
+    "last_name" => "Seban",
+    "mc_currency" => "USD",
+    "mc_fee" => "0.35",
+    "mc_gross" => "1.74",
+    "mc_gross_1" => "1.74",
+    "mc_handling" => "0.00",
+    "mc_handling1" => "0.00",
+    "mc_shipping" => "0.00",
+    "mc_shipping1" => "0.00",
+    "mp_currency" => "USD",
+    "mp_custom" => "",
+    "mp_cycle_start" => "18",
+    "mp_desc" => "Grant Sell-Sneakers.com permission to charge a transaction fee.",
+    "mp_id" => "B-25T94479M3913854A",
+    "mp_status" => "0",
+    "notify_version" => "3.8",
+    "num_cart_items" => "1",
+    "payer_email" => "decadancia@gmail.com",
+    "payer_id" => "JYM6GR62AKXMU",
+    "payer_status" => "verified",
+    "payment_date" => "14:21:23 Nov 18, 2014 PST",
+    "payment_fee" => "0.35",
+    "payment_gross" => "1.74",
+    "payment_status" => "Completed",
+    "payment_type" => "instant",
+    "protection_eligibility" => "Ineligible",
+    "quantity1" => "1",
+    "receiver_email" => "info@sneakers-app.com",
+    "receiver_id" => "4TC43655L2ACA",
+    "residence_country" => "US",
+    "tax" => "0.00",
+    "tax1" => "0.00",
+    "transaction_subject" => "Marketplace Sell-Sneakers.com took this commission from transaction regarding Sneakers App Snapback Black/White",
+    "txn_id" => "5SB75962UR2969139",
+    "txn_type" => "merch_pmt",
+    "verify_sign" => "AWupihapJ55v4E8OFm29kEztHiEDAMVpG.L2E5dZOLyfjHeBG77J9rTX"
+  }
+
   payment_refunded = {
     "mc_gross"=>"-1.20",
     "auth_exp"=>"23:50:00 Oct 03, 2014 PDT",
@@ -495,7 +544,8 @@ describe PaypalService::DataTypes::IPN do
       [payment_completed_2, :payment_completed],
       [payment_refunded_2, :payment_refunded],
       [payment_denied, :payment_denied],
-      [payment_completed_3, :payment_completed]
+      [payment_completed_3, :payment_completed],
+      [commission_paid, :commission_paid]
     ]
 
     input_with_expected_type.each do |(input, type)|
