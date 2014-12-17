@@ -227,7 +227,7 @@ ActiveRecord::Schema.define(:version => 20141205094929) do
   end
 
   add_index "communities_listings", ["community_id"], :name => "index_communities_listings_on_community_id"
-  add_index "communities_listings", ["listing_id", "community_id"], :name => "communities_listings"
+  add_index "communities_listings", ["listing_id", "community_id"], :name => "index_communities_listings"
 
   create_table "community_customizations", :force => true do |t|
     t.integer  "community_id"
@@ -312,7 +312,7 @@ ActiveRecord::Schema.define(:version => 20141205094929) do
     t.datetime "updated_at",      :null => false
   end
 
-  add_index "custom_field_names", ["custom_field_id", "locale"], :name => "locale_index"
+  add_index "custom_field_names", ["custom_field_id", "locale"], :name => "custom_field_names_locale_index"
   add_index "custom_field_names", ["custom_field_id"], :name => "index_custom_field_names_on_custom_field_id"
 
   create_table "custom_field_option_selections", :force => true do |t|
@@ -332,7 +332,8 @@ ActiveRecord::Schema.define(:version => 20141205094929) do
     t.datetime "updated_at",             :null => false
   end
 
-  add_index "custom_field_option_titles", ["custom_field_option_id", "locale"], :name => "locale_index"
+  add_index "custom_field_option_titles", ["custom_field_option_id", "locale"],
+            :name => "custom_field_option_titles_locale_index"
   add_index "custom_field_option_titles", ["custom_field_option_id"], :name => "index_custom_field_option_titles_on_custom_field_option_id"
 
   create_table "custom_field_options", :force => true do |t|
@@ -817,7 +818,8 @@ ActiveRecord::Schema.define(:version => 20141205094929) do
     t.datetime "updated_at",          :null => false
   end
 
-  add_index "transaction_type_translations", ["transaction_type_id", "locale"], :name => "locale_index"
+  add_index "transaction_type_translations", ["transaction_type_id", "locale"],
+            :name => "transaction_type_translations_locale_index"
   add_index "transaction_type_translations", ["transaction_type_id"], :name => "index_transaction_type_translations_on_transaction_type_id"
 
   create_table "transaction_types", :force => true do |t|

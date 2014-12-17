@@ -1,8 +1,10 @@
 source 'http://rubygems.org'
 
 ruby '2.1.2'
+#ruby '2.1.5'
 
 gem 'rails', '3.2.19'
+#gem 'rails', '4.1.8'
 
 # To use debugger
 #gem 'ruby-debug'
@@ -28,6 +30,7 @@ gem 'unicorn', "~>4.6.3"
 gem "rack-timeout"
 
 gem "mysql2"
+gem "pg"
 gem 'haml'
 gem 'sass', "  ~> 3.2.9"
 gem 'rest-client', '>= 1.6.0'
@@ -82,6 +85,8 @@ gem 'paypal-sdk-permissions',
   :ref    => 'c0240bee9f94fe6338d67b4f754e1a11ce81619a'
 gem 'paypal-sdk-merchant', '~> 1.116.0'
 gem 'airbrake', '~>4.1.0'
+
+gem 'rails_12factor', group: :production
 
 #ouisharelabs
 gem 'rdf-turtle'
