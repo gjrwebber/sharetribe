@@ -25,7 +25,7 @@ class Service < Offer
   DEFAULTS = {
     price_field: 1,
     price_quantity_placeholder: nil,
-    price_per: "day"
+    price_per: "person"
   }
 
   before_validation(:on => :create) do
