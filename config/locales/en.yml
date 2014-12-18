@@ -416,9 +416,11 @@ en:
       give_feedback_to: "Give feedback to %{person_link}"
       do_not_give_feedback: "Skip feedback"
     details:
+      person: person
       day: day
       days: days
       price_per_day: "Price per day: %{price}"
+      price_per_person: "Price per person: %{price}"
     index:
       loading_more_messages: "Loading more messages"
       message_partitive: message
