@@ -228,7 +228,13 @@ production: &production_settings
   # normally it is better to leave this for the web server (apache) to do.
   serve_static_assets_in_production: true
 
-  domain: "herokuapp.com"
+  dashboard_subdomains:
+    - ''
+    - 'dashboardtranslate'
+    - "catch"
+
+  domain: "boiling-depths-3246.herokuapp.com"
+  logger_type: "stdout"
 
 staging:
   <<: *production_settings
