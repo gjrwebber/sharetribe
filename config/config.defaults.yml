@@ -228,7 +228,7 @@ production: &production_settings
   # normally it is better to leave this for the web server (apache) to do.
   serve_static_assets_in_production: true
 
-  domain: "boiling-depths-3246.herokuapp.com"
+  domain: "sharetribe.catersnap.com"
   logger_type: "stdout"
 
 staging:
